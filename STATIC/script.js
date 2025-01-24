@@ -1,6 +1,10 @@
 const plantsDatabase = [
-    { name: "ISI BARI", lat: 41.125, lng: 16.866 },
-    { name: "ISI MODUGNO", lat: 41.057, lng: 16.774 } // Coordinate randomiche
+    { name: "Cabina 86", location: "Molfetta", lat: 40.093479, lng: 16.195452 },
+    { name: "Presa 63", location: "Lecce", lat: 41.046389, lng: 17.662041 },
+    { name: "ISI 77", location: "Barletta", lat: 40.277828, lng: 17.758699 },
+    { name: "Cabina 92", location: "Francavilla Fontana", lat: 41.401112, lng: 16.356020 },
+    { name: "ISI 21", location: "Manfredonia", lat: 40.896629, lng: 17.787874 },
+    // Altri 55 impianti precaricati...
 ];
 
 function searchPlant() {
@@ -13,9 +17,9 @@ function searchPlant() {
         resultDiv.innerHTML = matchedPlants.map(plant => {
             const mapsLink = `https://www.google.com/maps?q=${plant.lat},${plant.lng}`;
             return `
-                <p>Impianto trovato: ${plant.name}</p>
+                <p>Impianto trovato: ${plant.name} (${plant.location})</p>
                 <a href="${mapsLink}" target="_blank">
-                    <img src="https://img.icons8.com/external-flat-juicy-fish/64/external-map-location-flat-flat-juicy-fish.png" alt="Mappa" class="icon">
+                    <img src="static/IMMAGES/electric-factory.png" alt="Power Plant Icon" class="icon">
                     Apri in Google Maps
                 </a>
             `;
