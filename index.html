@@ -3,20 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ricerca Impianti</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Login e Ricerca Impianti</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: rgb(0, 96, 156); /* Sfondo principale */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            background: #ffffff;
+            color: #333;
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .logo-image {
+            max-width: 120px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: rgb(0, 96, 156);
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: rgb(0, 96, 156);
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid rgb(102, 178, 255);
+            border-radius: 8px;
+            font-size: 14px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: rgb(0, 96, 156);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: rgb(0, 76, 124);
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .result p {
+            margin: 0 0 10px;
+            font-size: 14px;
+            color: rgb(0, 96, 156);
+        }
+
+        .result a {
+            display: block;
+            margin-top: 10px;
+            padding: 12px 15px;
+            background-color: rgb(0, 96, 156);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .result a:hover {
+            background-color: rgb(0, 76, 124);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        #loginMessage {
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>
-            <img src="https://img.icons8.com/color/48/water.png" alt="Acqua" class="icon">
-            Ricerca Impianti
-        </h1>
-        <div class="search-box">
+    <!-- Login Page -->
+    <div class="container" id="loginContainer">
+        <img src="STATIC/IMMAGES/logo-aqp-acquedotto-pugliese.png" alt="Logo AQP" class="logo-image">
+        <h1>Login AQP</h1>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Inserisci username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Inserisci password">
+        </div>
+        <button onclick="validateLogin()">Login</button>
+        <p id="loginMessage"></p>
+    </div>
+
+    <!-- Sezione Impianti -->
+    <div class="container" id="plantsContainer" style="display: none;">
+        <img src="STATIC/IMMAGES/logo-aqp-acquedotto-pugliese.png" alt="Logo AQP" class="logo-image">
+        <h1>Ricerca Impianti</h1>
+        <div class="form-group">
             <input type="text" id="searchInput" placeholder="Inserisci il nome dell'impianto" oninput="searchPlant()">
         </div>
         <div class="result" id="result"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const users = [
+            { username: "aAbbinante", password: "Antonio07" },
+            { username: "gAbbinante", password: "Antonio07" },
+            { username: "user3", password: "admin" }
+        ];
+
+        const plantsDatabase = [
+            { name: "ISI BARI", lat: 41.125, lng: 16.866 },
+            { name: "ISI MODUGNO", lat: 41.057, lng: 16.774 },
+            { name: "Cabina 86", location: "Molfetta", lat: 40.093479, lng: 16.195452 },
+            { name: "Presa 63", location: "Lecce", lat: 41.046389, lng: 17.662041 },
+            { name: "ISI 77", location: "Barletta", lat: 40.277828, lng: 17.758699 },
+            { name: "Cabina 92", location: "Francavilla Fontana", lat: 41.401112, lng: 16.356020 },
+            { name: "ISI 21", location: "Manfredonia", lat: 40.896629, lng: 17.787874 }
+        ];
+
+        function validateLogin() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const loginMessage = document.getElementById("loginMessage");
+
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                loginMessage.textContent = "Login riuscito! Reindirizzamento...";
+                loginMessage.style.color = "green";
+                setTimeout(() => {
+                    document.getElementById("loginContainer").style.display = "none";
+                    document.getElementById("plantsContainer").style.display = "block";
+                }, 1000);
+            } else {
+                loginMessage.textContent = "Username o password errati!";
+                loginMessage.style.color = "red";
+            }
+        }
+
+        function searchPlant() {
+            const input = document.getElementById("searchInput").value.trim().toLowerCase();
+            const resultDiv = document.getElementById("result");
+
+            const matchedPlants = plantsDatabase.filter(plant =>
+                plant.name.toLowerCase().includes(input)
+            );
+
+            if (matchedPlants.length > 0) {
+                resultDiv.innerHTML = matchedPlants.map(plant => {
+                    const mapsLink = `https://www.google.com/maps?q=${plant.lat},${plant.lng}`;
+                    return `
+                        <p>Impianto trovato: ${plant.name} (${plant.location || "Posizione non specificata"})</p>
+                        <a href="${mapsLink}" target="_blank">
+                            <img src="STATIC/IMMAGES/electric-factory.png" alt="Power Plant Icon" class="icon">
+                            Apri in Google Maps
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                resultDiv.innerHTML = '<p>Nessun impianto trovato.</p>';
+            }
+        }
+    </script>
 </body>
 </html>
